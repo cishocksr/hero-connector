@@ -1,0 +1,15 @@
+{
+  "name": "hero-connector",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Monorepo for Hero Connector (client + backend)",
+  "author": "Chris Shockley <cishocksr@cishockley.com> (https://www.cishockley.com)",
+  "license": "ISC",
+  "packageManager": "pnpm@10.16.1",
+  "scripts": {
+    "web": "pnpm -F ./apps/client dev",
+    "web:build": "pnpm -F ./apps/client build",
+    "web:preview": "pnpm -F ./apps/client preview",
+    "list": "pnpm -w -r list"
+  }
+}

@@ -1,0 +1,18 @@
+# node / pnpm
+node_modules
+pnpm-lock.yml
+
+
+# IDE
+.idea
+.vscode
+
+# OS
+.DS_Store
+
+
+# Java / Maven
+backend/target
+backend/.mvn
+backend/mvw
+backend/mvnw.cmd
