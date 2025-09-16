@@ -1,18 +1,43 @@
-# node / pnpm
-node_modules
-pnpm-lock.yml
-
+# OS / Editors
+.DS_Store
+Thumbs.db
+*.swp
 
 # IDE
-.idea
-.vscode
+.vscode/
+.idea/
 
-# OS
-.DS_Store
+# Node / PNPM
+node_modules/
+.pnpm-store/
+pnpm-debug.log*
+npm-debug.log*
+yarn-debug.log*
 
+# Vite / TS build artefacts (any package)
+**/.vite/
+**/dist/
+**/build/
+**/.cache/
+**/*.tsbuildinfo
 
-# Java / Maven
-backend/target
-backend/.mvn
-backend/mvw
-backend/mvnw.cmd
+# Env files (per-package too)
+.env
+.env.*.local
+apps/**/.env
+packages/**/.env
+libs/**/.env
+
+# Tests / coverage
+coverage/
+
+# Java / Maven (backend)
+apps/backend/target/
+apps/backend/.classpath
+apps/backend/.project
+apps/backend/.settings/
+
+# Keep Maven wrapper tracked (do NOT ignore these)
+# .mvn/
+# mvnw
+# mvnw.cmd
