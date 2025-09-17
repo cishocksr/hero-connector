@@ -1,0 +1,23 @@
+name: server-ci
+
+on:
+  push:
+    paths: ["apps/server/**", ".github/workflows/server-ci.yml"]
+  pull_request:
+    paths: ["apps/server/**", ".github/workflows/server-ci.yml"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/server
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+      - name: Build & test
+        run: ./mvnw -B -DskipTests=false verify
