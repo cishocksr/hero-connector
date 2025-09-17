@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/hero}
+    username: ${DATABASE_USERNAME:hero}
+    password: ${DATABASE_PASSWORD:hero}
+  jpa:
+    hibernate:
+      ddl-auto: validate         # let Flyway create tables
+    properties:
+      hibernate.jdbc.time_zone: UTC
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+server:
+  port: 8080
