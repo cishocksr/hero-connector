@@ -2,7 +2,6 @@ package com.cishockley.hero.service;
 
 import com.cishockley.hero.dto.ResourceDto;
 import com.cishockley.hero.mapper.ResourceMapper;
-import com.cishockley.hero.model.Resource;
 import com.cishockley.hero.repo.ResourceRepository;
 import org.springframework.stereotype.Service;
 

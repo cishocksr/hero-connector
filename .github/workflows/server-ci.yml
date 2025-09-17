@@ -1,11 +1,10 @@
 name: server-ci
-
 on:
   push:
     paths: ["apps/server/**", ".github/workflows/server-ci.yml"]
   pull_request:
     paths: ["apps/server/**", ".github/workflows/server-ci.yml"]
-
+  workflow_dispatch: {} # <- enables manual “Run workflow” button
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,5 +18,7 @@ jobs:
           distribution: temurin
           java-version: "21"
           cache: maven
+      - name: Make mvnw executable (for safety)
+        run: git update-index --chmod=+x mvnw
       - name: Build & test
         run: ./mvnw -B -DskipTests=false verify

@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "resources")
 public class Resource {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, length = 120)
@@ -14,19 +16,41 @@ public class Resource {
     @Column(nullable = false, length = 32)
     private String category;
 
-    public Resource() {}                    // JPA-required no-arg (protected is fine)
+    // ---- Constructors ----
 
-    public Resource(String name, String category) {  // <-- public ctor for app code
+    /** JPA requires a no-args constructor (can be protected). */
+    protected Resource() {}
+
+    /** Convenience ctor for creating new Resources in code. */
+    public Resource(String name, String category) {
         this.name = name;
         this.category = category;
     }
 
-    public Long getId() { return id; }
-    private void setId(Long id) { this.id = id; } // keep private or remove
+    // ---- Getters / Setters ----
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getCategory() { return category; }
-    public void setCategory(String category) { this.category = category; }
+    /** Keep this private so JPA manages the ID. */
+    private void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
 }
