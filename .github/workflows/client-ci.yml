@@ -1,3 +1,4 @@
+# .github/workflows/client-ci.yml
 name: client-ci
 on:
   push:
@@ -14,7 +15,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # if you're using a self-hosted Mac runner, change to: runs-on: [self-hosted, macOS]
     steps:
       - uses: actions/checkout@v4
 
@@ -24,11 +25,30 @@ jobs:
           cache: "pnpm"
           cache-dependency-path: pnpm-lock.yaml
 
-      # actually install pnpm
-      - run: corepack enable
-      - run: corepack prepare pnpm@9 --activate
-      - run: pnpm -v
+      # Ensure Homebrew bin is on PATH (needed for self-hosted macOS; harmless elsewhere)
+      - name: Add Homebrew bin to PATH (mac)
+        if: runner.os == 'macOS'
+        run: echo "/opt/homebrew/bin" >> "$GITHUB_PATH"
 
-      # install once at the workspace root, then build the client
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm -C apps/client build
+      # Install pnpm via Corepack, fallback to npm -g if needed
+      - name: Install pnpm
+        shell: bash
+        run: |
+          set -euxo pipefail
+          corepack enable
+          corepack prepare pnpm@9 --activate || true
+          if ! command -v pnpm >/dev/null 2>&1; then
+            echo "Corepack didn't provide pnpm; installing via npm -g…"
+            npm i -g pnpm@9
+          fi
+          pnpm -v
+          which pnpm || true
+          echo "PATH=$PATH"
+
+      # Install at the workspace root
+      - name: Install deps
+        run: pnpm install --frozen-lockfile
+
+      # Build just the client app
+      - name: Build client
+        run: pnpm -C apps/client build
