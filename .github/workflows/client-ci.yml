@@ -18,23 +18,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Node + cache keyed to the *root* pnpm-lock.yaml
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "pnpm"
           cache-dependency-path: pnpm-lock.yaml
 
-      # Install pnpm on the runner
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 9
-          run_install: false
+      # actually install pnpm
+      - run: corepack enable
+      - run: corepack prepare pnpm@9 --activate
+      - run: pnpm -v
 
-      - run: pnpm -v # sanity check
-
-      # Install once at the workspace root
+      # install once at the workspace root, then build the client
       - run: pnpm install --frozen-lockfile
-
-      # Build just the client app
       - run: pnpm -C apps/client build
