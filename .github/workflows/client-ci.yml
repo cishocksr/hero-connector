@@ -20,14 +20,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Prove we're on a hosted Linux runner and show workspace
+      - name: Runner info (debug)
+        run: |
+          uname -a
+          echo "RUNNER_OS=$RUNNER_OS"
+          echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
+          pwd
+          ls -la
+
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "pnpm"
-          # IMPORTANT: this path is relative to the repo root
           cache-dependency-path: pnpm-lock.yaml
 
-      # Install pnpm on the runner (Corepack)
+      # Install pnpm via Corepack
       - name: Install pnpm
         run: |
           set -euxo pipefail
@@ -36,10 +44,10 @@ jobs:
           pnpm -v
           which pnpm
 
-      # Install deps at the workspace root
+      # Install deps at repo root (workspace)
       - name: Install deps
         run: pnpm install --frozen-lockfile
 
-      # Build the client app
+      # Build only the client app (no cd, use -C)
       - name: Build client
         run: pnpm -C apps/client build
