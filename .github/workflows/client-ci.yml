@@ -2,25 +2,39 @@ name: client-ci
 on:
   push:
     paths:
-      ["apps/client/**", "pnpm-lock.yaml", ".github/workflows/client-ci.yml"]
+      - "apps/client/**"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/client-ci.yml"
   pull_request:
     paths:
-      ["apps/client/**", "pnpm-lock.yaml", ".github/workflows/client-ci.yml"]
-  workflow_dispatch: {} # manual trigger
+      - "apps/client/**"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/client-ci.yml"
+  workflow_dispatch: {}
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: apps/client
     steps:
       - uses: actions/checkout@v4
+
+      # Node + cache keyed to the *root* pnpm-lock.yaml
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "pnpm"
+          cache-dependency-path: pnpm-lock.yaml
+
+      # Install pnpm on the runner
       - uses: pnpm/action-setup@v4
         with:
           version: 9
+          run_install: false
+
+      - run: pnpm -v # sanity check
+
+      # Install once at the workspace root
       - run: pnpm install --frozen-lockfile
-      - run: pnpm build
+
+      # Build just the client app
+      - run: pnpm -C apps/client build

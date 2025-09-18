@@ -1,10 +1,16 @@
 name: server-ci
+
 on:
   push:
-    paths: ["apps/server/**", ".github/workflows/server-ci.yml"]
+    paths:
+      - "apps/server/**"
+      - ".github/workflows/server-ci.yml"
   pull_request:
-    paths: ["apps/server/**", ".github/workflows/server-ci.yml"]
-  workflow_dispatch: {} # <- enables manual “Run workflow” button
+    paths:
+      - "apps/server/**"
+      - ".github/workflows/server-ci.yml"
+  workflow_dispatch: {}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -13,12 +19,16 @@ jobs:
         working-directory: apps/server
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: "21"
           cache: maven
-      - name: Make mvnw executable (for safety)
-        run: git update-index --chmod=+x mvnw
+
+      # Ensure wrapper files are present & executable
+      - name: Ensure Maven wrapper is executable
+        run: chmod +x mvnw
+
       - name: Build & test
         run: ./mvnw -B -DskipTests=false verify
